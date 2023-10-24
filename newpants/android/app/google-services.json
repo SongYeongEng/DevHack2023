@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "415578718144",
+    "project_id": "devhack2023-ebaf9",
+    "storage_bucket": "devhack2023-ebaf9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415578718144:android:083523c6b2521e0add9225",
+        "android_client_info": {
+          "package_name": "com.example.newpants"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv1ziBcnNFQg3drXIL71FiKUeUbsFQzFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

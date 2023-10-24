@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: 'YOUR_API_KEY',
+      appId: '1:415578718144:android:083523c6b2521e0add9225',
+      messagingSenderId: '415578718144',
+      projectId: 'devhack2023-ebaf9',
+    ),
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+   MyApp({super.key});
+
 
   // This widget is the root of your application.
   @override
@@ -28,7 +40,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -38,6 +50,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -56,6 +69,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  
+  final nameController = TextEditingController();
+  final responseController = TextEditingController();
+
 
   void _incrementCounter() {
     setState(() {
@@ -112,6 +130,28 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+             TextFormField(
+              controller: nameController,
+              decoration: InputDecoration(labelText: 'Name'),
+            ),
+            TextFormField(
+              controller: responseController,
+              decoration: InputDecoration(labelText: 'Response'),
+            ),
+
+            ElevatedButton(
+            onPressed: () {
+              // Define the action to be taken when the button is pressed.
+              CollectionReference collRef = FirebaseFirestore.instance.collection('client');
+              collRef.add({
+                'name': nameController.text,
+                'response': responseController.text,
+              });
+
+              print('Elevated Button Pressed');
+            },
+            child: const Text('Add Response')),
+
           ],
         ),
       ),
