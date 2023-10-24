@@ -5,18 +5,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
       apiKey: 'YOUR_API_KEY',
       appId: '1:415578718144:android:083523c6b2521e0add9225',
       messagingSenderId: '415578718144',
       projectId: 'devhack2023-ebaf9',
     ),
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
+   const MyApp({super.key});
 
 
   // This widget is the root of your application.
@@ -132,11 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
              TextFormField(
               controller: nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(labelText: 'Name'),
             ),
             TextFormField(
               controller: responseController,
-              decoration: InputDecoration(labelText: 'Response'),
+              decoration: const InputDecoration(labelText: 'Response'),
             ),
 
             ElevatedButton(
@@ -148,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 'response': responseController.text,
               });
 
-              print('Elevated Button Pressed');
             },
             child: const Text('Add Response')),
 
