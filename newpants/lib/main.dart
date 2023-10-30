@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import './pages/jobs.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -150,6 +150,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
             },
             child: const Text('Add Response')),
+
+
+            ElevatedButton(
+            onPressed: () {
+              // Push the SecondScreen onto the navigation stack when the button is pressed.
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => JobsScreen()),
+              );
+            },
+            child: const Text('Go to Second Screen'),),
 
           ],
         ),
