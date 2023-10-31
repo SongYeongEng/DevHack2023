@@ -96,9 +96,19 @@ class _JobsScreenState extends State<JobsScreen> {
         itemCount: jobs.length,
         itemBuilder: (context, index) {
           Job job = jobs[index];
-          return ListTile(
-            title: Text(job.jobClass),
-            subtitle: Text(job.jobDescription),
+          return Card(
+            child: ExpansionTile(
+              title: Text(job.jobClass),
+              children: <Widget>[
+                ListTile(
+                       title: Text("Company Name: ${job.companyName}"),
+                     ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(job.jobDescription),
+                ),
+              ],
+            ),
           );
         },
       ),
