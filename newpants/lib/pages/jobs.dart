@@ -107,6 +107,13 @@ class _JobsScreenState extends State<JobsScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(job.jobDescription),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Define what happens when the button is pressed
+                    // This is where you can add the button's functionality
+                  },
+                  child: Text('Apply'), // The text displayed on the button
+                )
               ],
             ),
           );
