@@ -9,6 +9,7 @@ class JobsScreen extends StatefulWidget {
 
 class _JobsScreenState extends State<JobsScreen> {
   List<Job> jobs = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -24,7 +25,7 @@ class _JobsScreenState extends State<JobsScreen> {
     });
   }
 
-  void _showAddJobDialog(BuildContext context) {
+ void _showAddJobDialog(BuildContext context) {
     Job newJob = Job(
       jobClass: '', // Initialize with an empty string or any default value
       companyName: '', // Initialize with an empty string or any default value
@@ -81,9 +82,22 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
-  void refresh() {
-    // Refresh the page by loading job data again
-    _loadJobData();
+  void searchJobs(String query) {
+    List<Job> filteredJobs = jobs
+        .where((job) =>
+            job.jobClass.toLowerCase().contains(query.toLowerCase()) ||
+            job.companyName.toLowerCase().contains(query.toLowerCase()) ||
+            job.jobDescription.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    setState(() {
+      jobs = filteredJobs;
+    });
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    _loadJobData(); // Reset the job list to the original state
   }
 
   @override
@@ -91,33 +105,54 @@ class _JobsScreenState extends State<JobsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Jobs'),
+
       ),
-      body: ListView.builder(
-        itemCount: jobs.length,
-        itemBuilder: (context, index) {
-          Job job = jobs[index];
-          return Card(
-            child: ExpansionTile(
-              title: Text(job.jobClass),
-              children: <Widget>[
-                ListTile(
-                       title: Text("Company Name: ${job.companyName}"),
-                     ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(job.jobDescription),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Define what happens when the button is pressed
-                    // This is where you can add the button's functionality
-                  },
-                  child: Text('Apply'), // The text displayed on the button
-                )
-              ],
+      body: Column(
+        children: [
+          TextField(
+            controller: searchController,
+            decoration: InputDecoration(
+              labelText: 'Search for Jobs',
+              prefixIcon: Icon(Icons.search),
             ),
-          );
-        },
+            onChanged: (value) {
+              searchJobs(value);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.clear),
+            onPressed: clearSearch,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: jobs.length,
+              itemBuilder: (context, index) {
+                Job job = jobs[index];
+                return Card(
+                  child: ExpansionTile(
+                    title: Text(job.jobClass),
+                    children: <Widget>[
+                      ListTile(
+                        title: Text("Company Name: ${job.companyName}"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(job.jobDescription),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Define what happens when the button is pressed
+                          // This is where you can add the button's functionality
+                        },
+                        child: Text('Apply'), // The text displayed on the button
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
