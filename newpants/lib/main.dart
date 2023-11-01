@@ -1,175 +1,125 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import './pages/jobs.dart';
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'YOUR_API_KEY',
-      appId: '1:415578718144:android:083523c6b2521e0add9225',
-      messagingSenderId: '415578718144',
-      projectId: 'devhack2023-ebaf9',
-    ),
-  );
-  runApp(const MyApp());
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(JobMatchingApp());
 }
 
-class MyApp extends StatelessWidget {
-   const MyApp({super.key});
-
-
-  // This widget is the root of your application.
+class JobMatchingApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  _JobMatchingAppState createState() => _JobMatchingAppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class _JobMatchingAppState extends State<JobMatchingApp> {
+  final questions = [
+    'I prefer working indoors',
+    'I enjoy trying new adventurous activities',
+    'I enjoy socializing and meeting new people',
+    'I am considerate of other people\'s feelings',
+    'I can handle stressful situations',
+  ];
 
+  final jobs = [
+    'Fry Cook', 'IT', 'HR', 'Sales', 'Engineer', 'Chef', 'Customer Service',
+    'Web Developer', 'Event Planner', 'Nurse', 'Graphic Designer', 'Teacher',
+    'Accountant', 'Photographer', 'Electrician', 'Marketing Manager',
+    'Project Manager', 'Pharmacist', 'Lawyer', 'Architect', 'Data Scientist'
+  ];
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  String matchedJob = '';
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  List<double> questionResponses = [3, 3, 3, 3, 3];
 
-  final String title;
+  Map<String, List<double>> jobPreferences = {
+    // Add your job preferences data here...
+  };
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  void matchJob() {
+    int bestMatchIndex = 0;
+    double bestMatchScore = double.maxFinite;
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+    for (int i = 0; i < jobs.length; i++) {
+      double matchScore = 0.0;
+      for (int j = 0; j < 5; j++) {
+        final jobPreference = jobPreferences[jobs[i]];
+        if (jobPreference != null) {
+          matchScore += (questionResponses[j] - jobPreference[j]).abs();
+        }
+      }
 
-  
-  final nameController = TextEditingController();
-  final responseController = TextEditingController();
+      if (matchScore < bestMatchScore) {
+        bestMatchScore = matchScore;
+        bestMatchIndex = i;
+      }
+    }
 
-
-  void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      matchedJob = jobs[bestMatchIndex];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Job Matching App'),
+          backgroundColor: Color.fromARGB(255, 78, 57, 76), // Change the app bar color.
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                for (int i = 0; i < 5; i++)
+                  Card(
+                    margin: EdgeInsets.all(16), // Add some margin around each card.
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Text(questions[i],
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Slider(
+                            value: questionResponses[i],
+                            onChanged: (value) {
+                              setState(() {
+                                questionResponses[i] = value;
+                              });
+                            },
+                            min: 1, // Adjust the scale min value.
+                            max: 5, // Adjust the scale max value.
+                            divisions: 4, // Divide the scale into 4 steps.
+                            label: questionResponses[i].toString(),
+                            activeColor: const Color.fromARGB(255, 158, 111, 167), // Set the active color.
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ElevatedButton(
+                  onPressed: matchJob,
+                  child: Text('Match Job'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.teal, // Change the button color.
+                  ),
+                ),
+                if (matchedJob.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'Matched Job: $matchedJob',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-             TextFormField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextFormField(
-              controller: responseController,
-              decoration: const InputDecoration(labelText: 'Response'),
-            ),
-
-            ElevatedButton(
-            onPressed: () {
-              // Define the action to be taken when the button is pressed.
-              CollectionReference collRef = FirebaseFirestore.instance.collection('client');
-              collRef.add({
-                'name': nameController.text,
-                'response': responseController.text,
-              });
-
-            },
-            child: const Text('Add Response')),
-
-
-            ElevatedButton(
-            onPressed: () {
-              // Push the SecondScreen onto the navigation stack when the button is pressed.
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => JobsScreen()),
-              );
-            },
-            child: const Text('Go to Second Screen'),),
-
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
