@@ -5,6 +5,8 @@ import './pages/jobs.dart';
 import './pages/job_recommendation.dart';
 import './pages/splash_screen.dart';
 import './pages/speechTest.dart';
+import 'package:camera/camera.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'myEntrace- Best Job Search Platform',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
@@ -51,7 +53,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
+  
   @override
   Widget build(BuildContext context) {
   
@@ -86,14 +88,17 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             child: const Text('Go Job List'),),
 
+
             ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              final cameras = await availableCameras();
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SpeechRecognitionPage()),
+              context,
+
+                MaterialPageRoute(builder: (context) => SpeechRecognitionPage(cameras)),
               );
             },
-            child: const Text('Speech Test'),),
+            child: const Text('Start Virtual Interview'),),
           ],
         ),
       ),
