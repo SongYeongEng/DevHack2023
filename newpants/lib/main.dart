@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import './pages/jobs.dart';
 import './pages/job_recommendation.dart';
 import './pages/splash_screen.dart';
+import './pages/speechTest.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,6 +86,14 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             child: const Text('Go Job List'),),
 
+            ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SpeechRecognitionPage()),
+              );
+            },
+            child: const Text('Speech Test'),),
           ],
         ),
       ),
