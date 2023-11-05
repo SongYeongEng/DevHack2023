@@ -13,52 +13,7 @@ class _JobRecommendationPageState extends State<JobRecommendationPage> {
   final nameController = TextEditingController();
   final responseController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Job Recommendation'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/job-think.png'), // Replace with the path to your image asset
-
-            TextFormField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextFormField(
-              controller: responseController,
-              decoration: const InputDecoration(labelText: 'Response'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                ResponseHandler.saveResponse(nameController.text, responseController.text);
-                // You can also display a confirmation message or navigate to another screen here.
-              },
-              child: const Text('Job Prediction'),
-            ),
-
-           
-          ],
-        ),
-      ),
-    );
-  }
-}
-void main() {
-  runApp(JobMatchingApp());
-}
-
-class JobMatchingApp extends StatefulWidget {
-  @override
-  _JobMatchingAppState createState() => _JobMatchingAppState();
-}
-
-class _JobMatchingAppState extends State<JobMatchingApp> {
-  final questions = [
+    final questions = [
     'I prefer working indoors',
     'I enjoy trying new adventurous activities',
     'I enjoy socializing and meeting new people',
@@ -123,67 +78,86 @@ class _JobMatchingAppState extends State<JobMatchingApp> {
     setState(() {
       matchedJob = jobs[bestMatchIndex];
     });
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Job Matching App'),
-          backgroundColor: Color.fromARGB(255, 78, 57, 76), // Change the app bar color.
-        ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                for (int i = 0; i < 5; i++)
-                  Card(
-                    margin: EdgeInsets.all(16), // Add some margin around each card.
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Text(questions[i],
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          Slider(
-                            value: questionResponses[i],
-                            onChanged: (value) {
-                              setState(() {
-                                questionResponses[i] = value;
-                              });
-                            },
-                            min: 1, // Adjust the scale min value.
-                            max: 5, // Adjust the scale max value.
-                            divisions: 4, // Divide the scale into 4 steps.
-                            label: questionResponses[i].toString(),
-                            activeColor: const Color.fromARGB(255, 158, 111, 167), // Set the active color.
-                          ),
-                        ],
+  
+
+}
+
+
+Widget build(BuildContext context) {
+  return MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(
+        title: Text('Job Matching App'),
+        backgroundColor: Color.fromARGB(255, 78, 57, 76),
+      ),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  for (int i = 0; i < 5; i++)
+                    Card(
+                      margin: EdgeInsets.all(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            Text(
+                              questions[i],
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            Slider(
+                              value: questionResponses[i],
+                              onChanged: (value) {
+                                setState(() {
+                                  questionResponses[i] = value;
+                                });
+                              },
+                              min: 1,
+                              max: 5,
+                              divisions: 4,
+                              label: questionResponses[i].toString(),
+                              activeColor: const Color.fromARGB(255, 158, 111, 167),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ElevatedButton(
-                  onPressed: matchJob,
-                  child: Text('Match Job'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.teal, // Change the button color.
-                  ),
-                ),
-                if (matchedJob.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'Matched Job: $matchedJob',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ElevatedButton(
+                    onPressed: matchJob,
+                    child: Text('Match Job'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.teal,
                     ),
                   ),
-              ],
+                  if (matchedJob.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Matched Job: $matchedJob',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
+          // Image positioned on top
+          Positioned(
+            top: 20, // Adjust the top position
+            left: 20, // Adjust the left position
+            child: Image.asset(
+              'assets/job-think.png', // Replace with the path to your image
+              width: 100, // Adjust the width
+              height: 100, // Adjust the height
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
